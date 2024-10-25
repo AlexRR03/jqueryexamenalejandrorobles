@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <title>Document</title>
+</head>
+<body>
+    
+
+        <div class="mb-3">
+            <label class="form-label">Serie:</label>
+            
+            <select  id="selectSerie">
+
+            </select>
+          </div>
+        <div class="mb-3">
+            <label class="form-label">Personaje:</label>
+                    
+            <select  id="selectPersonaje">
+            </select>
+          </div>
+        <button id="btnEdit" class="btn btn-primary">Editar</button>
+    
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/jquery-3.7.1.js"></script>
+    <script>
+         let urlApi ="https://apiseriespersonajes2024.azurewebsites.net/"
+        $(document).ready(function(){
+            cargarSeries()
+            cargarPersonajes()
+
+            $("#btnEdit").click(function(){
+                let idSerie=parseInt( $("#selectSerie option:selected").attr("id"))
+                let idPersonaje= parseInt($("#selectPersonaje option:selected").attr("id"))
+                console.log(idSerie)
+                console.log(idPersonaje)
+
+                $.ajax({
+                    url:urlApi+"api/Personajes/"+idPersonaje+"/"+idSerie,
+                    method:"PUT",
+                    contentType:"application/json",
+                    success:function(){
+                        console.log("Actualizado")
+                        window.location.href="index.html"
+                    }
+                })
+            })
+
+        })
+
+        function cargarSeries(){
+            $.ajax({
+        url: "https://apiseriespersonajes2024.azurewebsites.net/api/Series",
+        type:"GET",
+        contentType: "application/json",
+        success: function(data) {
+                let html=""
+                $.each(data,function(index,serie){
+                    let id = parseInt(index)+1
+                    html+="<option id='"+id+"'>"+serie.nombre+"</option>"
+                })
+                $("#selectSerie").html(html)
+        }
+       })     
+    
+    
+    }
+        
+        function cargarPersonajes(){
+            $.ajax({
+        url: "https://apiseriespersonajes2024.azurewebsites.net/api/Personajes",
+        type:"GET",
+        contentType: "application/json",
+        success: function(data) {
+                let html=""
+                $.each(data,function(index,personaje){
+                    let id = parseInt(index)+1
+                    html+="<option id='"+id+"'>"+personaje.nombre+"</option>"
+                })
+                $("#selectPersonaje").html(html)
+        }
+       })      
+        }
+    </script>
+
+</body>
+</html>
